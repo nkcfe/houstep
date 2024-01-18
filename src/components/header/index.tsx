@@ -13,13 +13,9 @@ const Header = () => {
 export default Header;
 
 const Base = styled.div`
-  position: absolute;
-  top: 0;
-
   width: 350px;
   height: 57px;
   background-color: #000;
-
   display: flex;
   justify-content: start;
   align-items: center;
