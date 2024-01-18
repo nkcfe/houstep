@@ -1,23 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from '../button';
+import { FooterProps } from './type';
 
-const Footer = () => {
-  const orderHandler = () => {};
+const Footer = (props: FooterProps) => {
+  const { isLoading, totalCount, totalPrice, onClickHandler } = props;
 
   return (
     <Base>
       <TotalWrapper>
-        <TotalItem>총 수량 : 0개</TotalItem>
-        <TotalItem>총 가격 : 0원</TotalItem>
+        <TotalItem>총 수량 : {totalCount.toLocaleString()}개</TotalItem>
+        <TotalItem>총 가격 : {totalPrice.toLocaleString()}원</TotalItem>
       </TotalWrapper>
       <Button
         size="small"
         color="black"
-        onClickhandler={orderHandler}
-        disabled={false}
+        onClickhandler={onClickHandler}
+        disabled={isLoading || totalCount === 0}
       >
-        주문하기
+        {isLoading ? '로딩중...' : '주문하기'}
       </Button>
     </Base>
   );

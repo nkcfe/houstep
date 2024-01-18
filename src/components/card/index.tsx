@@ -2,12 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import { ProductProps } from './type';
 import Bedge from '../bedge';
+import useCartStore from '../../store/cartStore';
 
-const ProductCard = (props: ProductProps) => {
-  const { event, name, price } = props;
+const ProductCard: React.FC<{ item: ProductProps }> = ({ item }) => {
+  const { event, name, price } = item;
+  const { cartItems, increaseCartItem, decreaseCartItem } = useCartStore();
+
+  const cartItem = cartItems.find((cartItem) => cartItem.id === item.id);
 
   return (
-    <Base event={event}>
+    <Base isInCart={cartItem !== undefined}>
       <ProductImage />
       <Wrapper>
         <ProductWrapper>
@@ -16,9 +20,9 @@ const ProductCard = (props: ProductProps) => {
         </ProductWrapper>
         <ProductWrapper>
           <ButtonWrapper>
-            <CountButton>-</CountButton>
-            <ProductCount>0</ProductCount>
-            <CountButton>+</CountButton>
+            <CountButton onClick={() => decreaseCartItem(item)}>-</CountButton>
+            <ProductCount>{cartItem ? cartItem.count : 0}</ProductCount>
+            <CountButton onClick={() => increaseCartItem(item)}>+</CountButton>
           </ButtonWrapper>
           <ProductPrice>{price.toLocaleString() + '원'}</ProductPrice>
         </ProductWrapper>
@@ -29,7 +33,7 @@ const ProductCard = (props: ProductProps) => {
 
 export default ProductCard;
 
-const Base = styled.div<{ event: number }>`
+const Base = styled.div<{ isInCart: boolean }>`
   display: flex;
   justify-content: start;
   align-items: center;
@@ -41,7 +45,8 @@ const Base = styled.div<{ event: number }>`
   border-radius: 15px;
   border: 1px solid rgba(0, 0, 0, 0.3);
 
-  background: ${({ event }) => (event ? 'rgba(247, 90, 47, 0.10)' : '#fff')};
+  background: ${({ isInCart }) =>
+    isInCart ? 'rgba(247, 90, 47, 0.10)' : '#fff'};
 `;
 
 const Wrapper = styled.div`
@@ -105,8 +110,8 @@ const ProductCount = styled.div`
   font-size: 18px;
   font-weight: 400;
   line-height: normal;
-  width: 18px;
   height: 18px;
+  min-width: 18px;
 `;
 
 const ProductPrice = styled.div`
